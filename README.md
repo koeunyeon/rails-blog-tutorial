@@ -325,4 +325,89 @@ edit_article GET    /articles/:id/edit(.:format)                                
 
 ```
 
-# 
+# 데이터 생성
+`/blog/app/articles_controller.rb`
+```
+class ArticlesController < ApplicationController
+  def index
+    @articles = Article.all
+  end
+
+  def show
+    @article = Article.find(params[:id])
+  end
+
+  def new
+    @article = Article.new
+  end
+
+  def create
+    @article = Article.new(title: "...", body: "...")
+
+    if @article.save
+      redirect_to @article
+    else
+      render :new
+    end
+  end
+end
+```
+
+# 데이터 생성 뷰
+`/blog/app/views/articles/new.html.erb`
+```
+<h1>New Article</h1>
+
+<%= form_with model: @article do |form| %>
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :body %><br>
+    <%= form.text_area :body %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+```
+
+# 데이터 생성 컨트롤러 수정해서 진짜 데이터 저장하게 만들기
+`/blog/app/articles_controller.rb`
+```
+class ArticlesController < ApplicationController
+  def index
+    @articles = Article.all
+  end
+
+  def show
+    @article = Article.find(params[:id])
+  end
+
+  def new
+    @article = Article.new
+  end
+
+  def create
+    @article = Article.new(article_params)
+
+    if @article.save
+      redirect_to @article
+    else
+      render :new
+    end
+  end
+
+  private
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
+end
+
+```
+
+# 유효성 검사

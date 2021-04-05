@@ -268,4 +268,61 @@ http://localhost:3000/articles/1
 
 ```
 
+# 리소스 기반 URL 매핑
+`/blog/config/routes.rb`
+```
+Rails.application.routes.draw do  
+  root "articles#index"  
+  resources:articles
+end
+```
+
+```
+ruby bin\rails routes
+```
+
+```
+        Prefix Verb   URI Pattern                                                                                       Controller#Action
+        root GET    /                                                                                                 articles#index   
+    articles GET    /articles(.:format)                                                                               articles#index   
+                POST   /articles(.:format)                                                                               articles#create  
+    new_article GET    /articles/new(.:format)                                                                           articles#new
+edit_article GET    /articles/:id/edit(.:format)                                                                      articles#edit
+        article GET    /articles/:id(.:format)                                                                           articles#show
+                PATCH  /articles/:id(.:format)                                                                           articles#update
+                PUT    /articles/:id(.:format)                                                                           articles#update
+                DELETE /articles/:id(.:format)                                                                           articles#destroy
+
+```
+
+# 리소스 기반 링크 걸기
+`/blog/app/views/articles/index.html.erb`
+```
+<h1>Articles</h1>
+
+<ul>
+  <% @articles.each do |article| %>
+    <li>
+      <a href="<%= article_path(article) %>">
+        <%= article.title %>
+      </a>
+    </li>
+  <% end %>
+</ul>
+```
+
+`link_to`를 사용해서 링크 걸기
+```
+<h1>Articles</h1>
+
+<ul>
+  <% @articles.each do |article| %>
+    <li>
+      <%= link_to article.title, article %>
+    </li>
+  <% end %>
+</ul>
+
+```
+
 # 
